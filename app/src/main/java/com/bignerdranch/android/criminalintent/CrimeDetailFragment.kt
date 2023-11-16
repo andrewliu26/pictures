@@ -122,6 +122,17 @@ class CrimeDetailFragment : Fragment() {
             crimeCamera.isEnabled = canResolveIntent(captureImageIntent)
         }
 
+        binding.crimePhoto.setOnClickListener {
+            crimeDetailViewModel.crime.value?.photoFileName?.takeIf { it.isNotBlank() }?.let { photoFileName ->
+                val photoDialogFragment = PhotoDialogFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(PhotoDialogFragment.ARG_PHOTO_FILE_NAME, photoFileName)
+                    }
+                }
+                photoDialogFragment.show(childFragmentManager, PhotoDialogFragment.TAG)
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 crimeDetailViewModel.crime.collect { crime ->
